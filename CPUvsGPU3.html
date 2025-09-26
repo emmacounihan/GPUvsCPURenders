@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU vs. GPU Video Rendering Clean Demo</title>
+    <style>
+        /* Global Styling Changes */
+        body {
+            font-family: Arial, sans-serif; /* Changed to Arial */
+            margin: 0;
+            padding: 20px;
+            background-color: white; /* Changed to White */
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #1a73e8; /* A professional blue */
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        /* Container and Card Styling (Simplified) */
+        .comparison-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .renderer-card {
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 320px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        .cpu { border-top: 5px solid #ff4d4d; } /* Clean Red Accent */
+        .gpu { border-top: 5px solid #1abc9c; } /* Clean Teal Accent */
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.8em;
+            padding-bottom: 5px;
+        }
+        .cpu h2 { color: #cc0000; }
+        .gpu h2 { color: #008066; }
+
+        /* Video/Demo Simulation Area */
+        .video-box {
+            height: 180px;
+            border: 2px solid #ccc;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 5px;
+            font-size: 1.1em;
+            color: #555;
+            background-color: #ffffff;
+        }
+       
+        /* New Loading Spinner Styles */
+        .loading-spinner {
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* CPU Spinner: Slower speed, Red color */
+        .cpu .loading-spinner {
+            border-left-color: #ff4d4d;
+            animation-duration: 2.5s; /* Slower spin to represent CPU */
+            width: 50px;
+            height: 50px;
+        }
+
+        /* GPU Spinner: Faster speed, Teal color */
+        .gpu .loading-spinner {
+            border-left-color: #1abc9c;
+            animation-duration: 0.8s; /* Faster spin to represent GPU */
+            width: 30px;
+            height: 30px;
+        }
+
+        /* Rendered Video Styles (Cleaned up) */
+        .rendered-content {
+            font-size: 1.4em;
+            padding: 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+        .cpu .rendered-content {
+            background-color: #fff0f0;
+            color: #cc0000;
+            border: 1px solid #ff4d4d;
+        }
+        .gpu .rendered-content {
+            background-color: #e8f9f5;
+            color: #008066;
+            border: 1px solid #1abc9c;
+        }
+
+        .video-label {
+            font-size: 0.9em;
+            margin-top: 5px;
+            color: #666;
+        }
+
+        /* Button Styling */
+        .render-button {
+            padding: 12px 25px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 25px auto;
+            transition: background-color 0.3s, transform 0.3s;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
+        #startRender {
+            background-color: #1a73e8;
+            color: white;
+        }
+        #startRender:hover {
+            background-color: #0b5fb3;
+            transform: translateY(-2px);
+        }
+        #startRender:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+       
+        .description {
+            margin-top: 20px;
+            font-size: 0.95em;
+            line-height: 1.5;
+            text-align: left;
+            padding: 10px;
+            border-top: 1px solid #eee;
+            color: #444;
+        }
+        .description p { margin-bottom: 5px; }
+
+    </style>
+</head>
+<body>
+
+    <h1>Processor Performance: CPU vs. GPU Video Rendering</h1>
+
+    <button id="startRender" class="render-button">Start Rendering Simulation</button>
+
+    <div class="comparison-container">
+        <div class="renderer-card cpu">
+            <h2>CPU (Central Processing Unit)</h2>
+            <p><strong>Generalist Task Manager:</strong> Handles everything, including video processing.</p>
+            <div id="cpuVideoBox" class="video-box">
+                Awaiting CPU rendering task...
+            </div>
+            <p id="cpuStatus">Status: Idle</p>
+            <div class="description">
+                <p>🐢 **Performance:** Slower for tasks that require parallel processing, like encoding and decoding high-resolution video streams. It must share its limited "master cores" with the operating system and other apps.</p>
+                <p>🚫 **Result:** Longer rendering times and potential frame drops during complex, real-time video playback.</p>
+            </div>
+        </div>
+
+        <div class="renderer-card gpu">
+            <h2>GPU (Graphics Processing Unit)</h2>
+            <p><strong>Specialized Parallel Processor:</strong> Built for graphics and massive simultaneous calculations.</p>
+            <div id="gpuVideoBox" class="video-box">
+                Awaiting GPU rendering task...
+            </div>
+            <p id="gpuStatus">Status: Idle</p>
+            <div class="description">
+                <p>⚡ **Performance:** Extremely fast for video processing due to thousands of specialized, parallel cores. It offloads the work from the CPU, allowing the system to remain responsive.</p>
+                <p>✅ **Result:** Lightning-fast rendering and extremely smooth, high-quality playback for 4K/8K and complex video effects.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('startRender').addEventListener('click', function() {
+            this.disabled = true;
+            this.textContent = 'Rendering in Progress...';
+           
+            // --- CPU Simulation ---
+            const cpuBox = document.getElementById('cpuVideoBox');
+            const cpuStatus = document.getElementById('cpuStatus');
+            cpuStatus.textContent = 'Status: Processing... (Slower Parallelism)';
+            cpuBox.innerHTML = '<div class="loading-spinner"></div><div class="video-label">CPU cores processing sequentially...</div>';
+           
+            // CPU "Rendering" takes 8 seconds
+            setTimeout(() => {
+                cpuBox.innerHTML = `
+                    <div class="rendered-content">
+                        🎥 CPU Render Complete (8s)
+                    </div>
+                    <div class="video-label">Result: Completed task, but slower overall.</div>
+                `;
+                cpuStatus.textContent = 'Status: Complete (8s)';
+            }, 8000);
+
+            // --- GPU Simulation ---
+            const gpuBox = document.getElementById('gpuVideoBox');
+            const gpuStatus = document.getElementById('gpuStatus');
+            gpuStatus.textContent = 'Status: Processing... (Massive Parallelism)';
+            gpuBox.innerHTML = '<div class="loading-spinner"></div><div class="video-label">GPU cores processing in parallel...</div>';
+           
+            // GPU "Rendering" takes 3 seconds
+            setTimeout(() => {
+                gpuBox.innerHTML = `
+                    <div class="rendered-content">
+                        🌟 GPU Render Complete (3s)
+                    </div>
+                    <div class="video-label">Result: Significantly faster, optimized output.</div>
+                `;
+                gpuStatus.textContent = 'Status: Complete (3s)';
+            }, 3000);
+
+            // Re-enable button
+            setTimeout(() => {
+                this.disabled = false;
+                this.textContent = 'Run Simulation Again';
+            }, 8000);
+        });
+    </script>
+
+</body>
+</html>
+ 
