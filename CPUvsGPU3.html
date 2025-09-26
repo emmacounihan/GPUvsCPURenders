@@ -165,34 +165,34 @@
 </head>
 <body>
 
-    <h1>Processor Performance: CPU vs. GPU Video Rendering</h1>
+    <h1>Processor Performance: Integrated vs. Discrete GPU Video Rendering</h1>
 
     <button id="startRender" class="render-button">Start Rendering Simulation</button>
 
     <div class="comparison-container">
         <div class="renderer-card cpu">
-            <h2>CPU (Central Processing Unit)</h2>
-            <p><strong>Generalist Task Manager:</strong> Handles everything, including video processing.</p>
+            <h2>Integrated GPU (Graphics Processing Unit)</h2>
+            <p><strong>Generalist Task Manager:</strong> An integrated GPU forms part of the CPU which handles everything in the computer, including video processing.</p>
             <div id="cpuVideoBox" class="video-box">
-                Awaiting CPU rendering task...
+                Awaiting integrated rendering task...
             </div>
             <p id="cpuStatus">Status: Idle</p>
             <div class="description">
-                <p>🐢 **Performance:** Slower for tasks that require parallel processing, like encoding and decoding high-resolution video streams. It must share its limited "master cores" with the operating system and other apps.</p>
-                <p>🚫 **Result:** Longer rendering times and potential frame drops during complex, real-time video playback.</p>
+                <p>🐢 Performance: Slower for tasks that require parallel processing, like encoding and decoding high-resolution video streams. It must share its limited "master cores" with the operating system and other apps.</p>
+                <p>🚫 Result: Longer rendering times and potential frame drops during complex, real-time video playback.</p>
             </div>
         </div>
 
         <div class="renderer-card gpu">
-            <h2>GPU (Graphics Processing Unit)</h2>
-            <p><strong>Specialized Parallel Processor:</strong> Built for graphics and massive simultaneous calculations.</p>
+            <h2>Discrete GPU (Graphics Processing Unit)</h2>
+            <p><strong>Specialized Parallel Processor:</strong> Specially built for graphics and massive simultaneous calculations.</p>
             <div id="gpuVideoBox" class="video-box">
-                Awaiting GPU rendering task...
+                Awaiting discrete rendering task...
             </div>
             <p id="gpuStatus">Status: Idle</p>
             <div class="description">
-                <p>⚡ **Performance:** Extremely fast for video processing due to thousands of specialized, parallel cores. It offloads the work from the CPU, allowing the system to remain responsive.</p>
-                <p>✅ **Result:** Lightning-fast rendering and extremely smooth, high-quality playback for 4K/8K and complex video effects.</p>
+                <p>⚡ Performance: Extremely fast for video processing due to thousands of specialized, parallel cores. It offloads the work from the CPU, allowing the system to remain responsive.</p>
+                <p>✅ Result: Lightning-fast rendering and extremely smooth, high-quality playback for 4K/8K and complex video effects.</p>
             </div>
         </div>
     </div>
@@ -205,7 +205,7 @@
             // --- CPU Simulation ---
             const cpuBox = document.getElementById('cpuVideoBox');
             const cpuStatus = document.getElementById('cpuStatus');
-            cpuStatus.textContent = 'Status: Processing... (Slower Parallelism)';
+            cpuStatus.textContent = 'Status: Processing...';
             cpuBox.innerHTML = '<div class="loading-spinner"></div><div class="video-label">CPU cores processing sequentially...</div>';
            
             // CPU "Rendering" takes 8 seconds
@@ -222,7 +222,7 @@
             // --- GPU Simulation ---
             const gpuBox = document.getElementById('gpuVideoBox');
             const gpuStatus = document.getElementById('gpuStatus');
-            gpuStatus.textContent = 'Status: Processing... (Massive Parallelism)';
+            gpuStatus.textContent = 'Status: Processing...';
             gpuBox.innerHTML = '<div class="loading-spinner"></div><div class="video-label">GPU cores processing in parallel...</div>';
            
             // GPU "Rendering" takes 3 seconds
@@ -246,4 +246,5 @@
 
 </body>
 </html>
+
  
